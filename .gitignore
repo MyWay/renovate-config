@@ -1,0 +1,16 @@
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+npmrc
+.npmrc
+.yarnrc.yml
+.pypirc
+.netrc
+docker-compose.override.yml
+secrets.*
+credentials.*

@@ -1,0 +1,29 @@
+# lefthook.yml
+
+pre-commit:
+  commands:
+    gitleaks:
+      run: gitleaks protect --staged --verbose
+
+    block-sensitive-files:
+      run: |
+        files="$(git diff --cached --name-only)"
+
+        echo "$files" | grep -E '(^|/)(\.env.*|\.npmrc|\.pypirc|\.netrc|id_rsa|id_ed25519|.*\.(pem|key|p12|pfx)|secrets\..*|credentials\..*|.*\.secret|.*\.secrets)$' && {
+          echo "Blocked: do not commit secrets, credentials, keys, or private config to this public repository."
+          exit 1
+        } || true
+
+pre-push:
+  commands:
+    gitleaks:
+      run: gitleaks detect --verbose
+
+    block-sensitive-files:
+      run: |
+        files="$(git diff --name-only origin/main...HEAD 2>/dev/null || git diff --name-only HEAD~1...HEAD)"
+
+        echo "$files" | grep -E '(^|/)(\.env.*|\.npmrc|\.pypirc|\.netrc|id_rsa|id_ed25519|.*\.(pem|key|p12|pfx)|secrets\..*|credentials\..*|.*\.secret|.*\.secrets)$' && {
+          echo "Blocked: do not push secrets, credentials, keys, or private config to this public repository."
+          exit 1
+        } || true
