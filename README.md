@@ -1,67 +1,25 @@
-# Renovate Config
+# Renovate Configuration
 
-Shared Renovate configuration for this GitHub organization.
+Automated dependency updates via [Renovate](https://docs.renovatebot.com/).
 
-This repository contains reusable Renovate presets used by other repositories via:
+Repos without a `renovate.json` at the root are silently skipped.
 
-```json
-{
-  "extends": ["github>YOUR_ORG/renovate-config"]
-}
-```
+## Update strategy
 
-## Files
+| Update type | Behaviour |
+|---|---|
+| Patch | Automerged after CI passes |
+| Minor | PR opened, manual review required |
+| Minor (security) | Automerged after CI passes |
+| Major | PR opened, requires dashboard approval |
+| Vulnerability alert | Automerged immediately after CI passes |
 
-* `default.json` — default Renovate preset for most repositories.
-* Additional presets may be added later for specific repository types.
+Regular patch and minor updates must be at least 3 days old before Renovate acts on them, giving time for post-release issues to surface. Security fixes bypass this wait entirely.
 
-## Security
+## Lockfile
 
-This repository is public.
+`postUpdateOptions: ["pnpmDedupe"]` ensures Renovate regenerates `pnpm-lock.yaml` after updating `package.json`, keeping the lockfile consistent with declared dependencies.
 
-Do not commit secrets, tokens, registry credentials, private hostnames, internal URLs, customer names, or confidential workflow details.
+## Dashboard
 
-Allowed:
-
-* Renovate package rules
-* PR limits
-* grouping rules
-* automerge policy
-* labels
-* schedules
-* dependency dashboard settings
-
-Not allowed:
-
-* GitHub tokens
-* npm, Docker, PyPI, Maven, NuGet, or other registry credentials
-* private registry URLs
-* internal service names
-* customer or project-sensitive names
-* SSH keys
-* `.env` files
-* production configuration
-
-Secrets and credentials must be stored in the Renovate app settings, CI secrets, self-hosted Renovate environment variables, or a secret manager.
-
-## Usage
-
-In each repository, add a `renovate.json` file:
-
-```json
-{
-  "extends": ["github>YOUR_ORG/renovate-config"]
-}
-```
-
-Repository-specific overrides may be added only when necessary.
-
-## Policy
-
-Patch updates may be automerged after CI passes.
-
-Minor updates require review.
-
-Major updates require manual approval.
-
-The main branch must remain protected by CI checks.
+Major updates require explicit approval via the Renovate dependency dashboard before a PR is even created. The dashboard also provides an overview of all pending updates across repos.
