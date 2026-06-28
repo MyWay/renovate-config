@@ -1,4 +1,5 @@
 "packageRules": [
+  "postUpdateOptions": ["pnpmDedupe"],
   {
     "description": "Automerge regular patch updates after CI passes",
     "matchUpdateTypes": ["patch"],
