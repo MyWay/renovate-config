@@ -1,43 +1,26 @@
-{
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
-
-  "dependencyDashboard": true,
-  "labels": ["dependencies"],
-
-  "prConcurrentLimit": 5,
-  "prHourlyLimit": 2,
-
-  "minimumReleaseAge": "3 days",
-  "internalChecksFilter": "strict",
-
-  "platformAutomerge": true,
-
-  "vulnerabilityAlerts": {
-    "enabled": true,
-    "labels": ["security"],
+"packageRules": [
+  {
+    "description": "Automerge regular patch updates after CI passes",
+    "matchUpdateTypes": ["patch"],
     "automerge": true,
-    "automergeType": "pr",
-    "vulnerabilityFixStrategy": "lowest"
+    "automergeType": "pr"
   },
-
-  "packageRules": [
-    {
-      "description": "Automerge regular patch updates after CI passes",
-      "matchUpdateTypes": ["patch"],
-      "automerge": true,
-      "automergeType": "pr"
-    },
-    {
-      "description": "Keep regular minor updates reviewable",
-      "matchUpdateTypes": ["minor"],
-      "automerge": false
-    },
-    {
-      "description": "Gate major updates through dashboard approval",
-      "matchUpdateTypes": ["major"],
-      "automerge": false,
-      "dependencyDashboardApproval": true
-    }
-  ]
-}
+  {
+    "description": "Keep regular minor updates reviewable",
+    "matchUpdateTypes": ["minor"],
+    "automerge": false
+  },
+  {
+    "description": "Automerge minor-version security patches",
+    "matchUpdateTypes": ["minor"],
+    "matchIsVulnerabilityAlert": true,
+    "automerge": true,
+    "automergeType": "pr"
+  },
+  {
+    "description": "Gate major updates through dashboard approval",
+    "matchUpdateTypes": ["major"],
+    "automerge": false,
+    "dependencyDashboardApproval": true
+  }
+]
